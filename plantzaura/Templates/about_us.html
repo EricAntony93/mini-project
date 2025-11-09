@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - PlantzAura</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ✅ SOFTER, AESTHETIC BACKGROUND */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(20,60,40,0.35), rgba(10,30,20,0.55)), url("{% static 'img/plantzaura_background2.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            filter: blur(4px);
+            z-index: -1;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #1b3328;
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .header-title {
+            text-align: center;
+            padding: 50px 0 20px 0;
+            font-size: 52px;
+            font-weight: 800;
+            color: #175d2c;
+            letter-spacing: 3px;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.35);
+        }
+
+        /* ✅ HERO SECTION WITH SOFTER, MATCHING IMAGE */
+        .hero-section {
+            margin: 30px auto;
+            width: 90%;
+            height: 330px;
+            border-radius: 25px;
+            background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.35)), url("{% static 'img/plantzaura_background1.jpg' %}");
+            background-size: cover;
+            background-position: center top;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.35);
+            transition: 0.4s ease;
+            filter: saturate(115%) contrast(95%) brightness(92%);
+        }
+        .hero-section:hover {
+            transform: scale(1.01);
+            box-shadow: 0 15px 45px rgba(0,0,0,0.45);
+        }
+
+        .hero-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 46px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0,0,0,0.75);
+            z-index: 2;
+        }
+
+        /* ✅ GLASS BOX IMPROVED LOOK */
+        .content-box {
+            margin: 60px auto;
+            width: 90%;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(14px) saturate(160%);
+            -webkit-backdrop-filter: blur(14px) saturate(160%);
+            padding: 50px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 12px 45px rgba(0,0,0,0.35);
+            line-height: 1.9;
+            font-size: 18px;
+            transition: 0.3s ease;
+        }
+
+        .content-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+        }
+
+        .content-box h3 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #155a27;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+        }
+
+        .content-box p {
+            margin-bottom: 20px;
+            color: #0f2e1e;
+        }
+
+        .content-box a {
+            color: #0c5120;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+        .content-box a:hover {
+            text-decoration: underline;
+            color: #093b18;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-title">PlantzAura</div>
+
+    <div class="hero-section">
+        <div class="hero-text">About Us</div>
+    </div>
+
+    <div class="content-box">
+        <h3 class="text-center mb-3">Who We Are</h3>
+
+        <p>
+            We believe that plants are more than just décor — they purify the air, reduce stress, improve mood, and help people stay connected to nature. PlantzAura is focused on offering handpicked plants suitable for every lifestyle.
+        </p>
+
+        <p>
+            Our mission is simple: <strong>Make greenery easy, accessible, and enjoyable for everyone.</strong>
+        </p>
+
+        <p>
+           <strong>Our Promise:</strong> Every plant is handled with care so you receive vibrant, healthy, long-lasting greens.
+        </p>
+
+        <p><strong>For Further Inquiries:</strong> <a href="https://maps.app.goo.gl/Qg5ojTH7YqegB7pp6" target="_blank">Find us here</a></p>
+    </div>
+
+</body>
+</html>

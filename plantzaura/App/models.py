@@ -1,6 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-# Create your models here.
 class Product(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
@@ -8,9 +8,17 @@ class Product(models.Model):
     stock = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    CATEGORY_CHOICES = [
+    ("ordinary", "Ordinary Plants"),
+    ("exotic", "Exotic"),
+    ("fertilizer", "Fertilizers & Accessories"),
+    ("decor", "Decor"),
+]
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default="ordinary")
 
-    def __str__(self):
+def __str__(self):
         return self.name
+    
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
@@ -35,9 +43,26 @@ class Customer(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+
 class CartItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.PositiveIntegerField(default=1)
+
+    def total_price(self):
+        return self.product.price * self.quantity
+
 
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
+    
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    added_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'product')
+
+    def __str__(self):
+        return f"{self.product.name} - {self.user.username}"

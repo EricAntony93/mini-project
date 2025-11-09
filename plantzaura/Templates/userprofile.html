@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile – Plantz Aura</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #eaf5ea;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #f1f8f2;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            background: #4caf50;
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #43a047;
+        }
+
+        .logout {
+            background: #c62828;
+        }
+
+        .logout:hover {
+            background: #b71c1c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Your Profile 🌿</h2>
+
+    <div class="info-box">
+        <span class="label">Username:</span> {{ user.username }}
+    </div>
+
+    <div class="info-box">
+        <span class="label">Email:</span> {{ user.email }}
+    </div>
+
+    <div class="buttons">
+        <a href="#" class="btn">Edit Profile</a>
+        <a href="{% url 'logout' %}" class="btn logout">Logout</a>
+    </div>
+</div>
+
+</body>
+</html>

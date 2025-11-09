@@ -3,7 +3,7 @@
 {% load static %}
     <head>
         <meta charset="utf-8">
-        <title>Fruitables - Vegetable Website Template</title>
+        <title>PlantzAura - Greenify Your Home</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <meta content="" name="keywords">
         <meta content="" name="description">
@@ -18,15 +18,15 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
         <!-- Libraries Stylesheet -->
-        <link href="{% load static %}lib/lightbox/css/lightbox.min.css" rel="stylesheet">
-        <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+        <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
+        <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
 
 
         <!-- Customized Bootstrap Stylesheet -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 
         <!-- Template Stylesheet -->
-        <link href="css/style.css" rel="stylesheet">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
     </head>
 
     <body>
@@ -55,25 +55,25 @@
             </div>
             <div class="container px-0">
                 <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                    <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">Fruitables</h1></a>
+                    <a href="{% url 'index' %}" class="navbar-brand"><h1 class="text-primary display-6">PlantzAura</h1></a>
                     <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                         <span class="fa fa-bars text-primary"></span>
                     </button>
                     <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                         <div class="navbar-nav mx-auto">
-                            <a href="index.html" class="nav-item nav-link">Home</a>
-                            <a href="shop.html" class="nav-item nav-link">Shop</a>
-                            <a href="cart.html" class="nav-item nav-link">Shop Cart</a>
-                            <a href="chackout.html" class="nav-item nav-link">Chackout</a>
-                            <a href="contact.html" class="nav-item nav-link active">Contact</a>
+                            <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+                            <a href="{% url 'shop' %}" class="nav-item nav-link">Shop</a>
+                            <a href="{% url 'cart' %}" class="nav-item nav-link">Shop Cart</a>
+                            <a href="{% url 'checkout' %}" class="nav-item nav-link">Checkout</a>
+                            <a href="{% url 'contact' %}" class="nav-item nav-link active">Contact</a>
                         </div>
                         <div class="d-flex m-3 me-0">
                             <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
-                            <a href="#" class="position-relative me-4 my-auto">
+                            <a href="{% url 'cart' %}" class="position-relative me-4 my-auto">
                                 <i class="fa fa-shopping-bag fa-2x"></i>
                                 <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
                             </a>
-                            <a href="#" class="my-auto">
+                            <a href="{% url 'user_profile' %}" class="my-auto">
                                 <i class="fas fa-user fa-2x"></i>
                             </a>
                         </div>
@@ -108,7 +108,7 @@
         <div class="container-fluid page-header py-5">
             <h1 class="text-center text-white display-6">Contact</h1>
             <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
                 <li class="breadcrumb-item"><a href="#">Pages</a></li>
                 <li class="breadcrumb-item active text-white">Contact</li>
             </ol>
@@ -130,7 +130,7 @@
                         <div class="col-lg-12">
                             <div class="h-100 rounded">
                                 <iframe class="rounded w-100" 
-                                style="height: 400px;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387191.33750346623!2d-73.97968099999999!3d40.6974881!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sbd!4v1694259649153!5m2!1sen!2sbd" 
+                                style="height: 400px;" src="https://maps.app.goo.gl/Qg5ojTH7YqegB7pp6" target="_blank"
                                 loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                             </div>
                         </div>
@@ -147,14 +147,14 @@
                                 <i class="fas fa-map-marker-alt fa-2x text-primary me-4"></i>
                                 <div>
                                     <h4>Address</h4>
-                                    <p class="mb-2">123 Street New York.USA</p>
+                                    <p class="mb-2">Chirattapalam,Fort Kochi,Ernakulam,Kerala,India</p>
                                 </div>
                             </div>
                             <div class="d-flex p-4 rounded mb-4 bg-white">
                                 <i class="fas fa-envelope fa-2x text-primary me-4"></i>
                                 <div>
                                     <h4>Mail Us</h4>
-                                    <p class="mb-2">info@example.com</p>
+                                    <p class="mb-2">PlantzAura@example.com</p>
                                 </div>
                             </div>
                             <div class="d-flex p-4 rounded bg-white">
@@ -179,8 +179,8 @@
                     <div class="row g-4">
                         <div class="col-lg-3">
                             <a href="#">
-                                <h1 class="text-primary mb-0">Fruitables</h1>
-                                <p class="text-secondary mb-0">Fresh products</p>
+                                <h1 class="text-primary mb-0">PlantzAura</h1>
+                                <p class="text-secondary mb-0">Our Products</p>
                             </a>
                         </div>
                         <div class="col-lg-6">
@@ -222,22 +222,20 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="d-flex flex-column text-start footer-item">
                             <h4 class="text-light mb-3">Account</h4>
-                            <a class="btn-link" href="">My Account</a>
-                            <a class="btn-link" href="">Shop details</a>
-                            <a class="btn-link" href="">Shopping Cart</a>
-                            <a class="btn-link" href="">Wishlist</a>
-                            <a class="btn-link" href="">Order History</a>
+                            <a class="btn-link" href="{% url 'user_profile' %}">My Account</a>
+                            <a class="btn-link" href="{% url 'cart' %}">Shopping Cart</a>
+                            <a class="btn-link" href="{% url 'Blog' %}">Blog</a>
                             <a class="btn-link" href="">International Orders</a>
                         </div>
                     </div>
                     <div class="col-lg-3 col-md-6">
                         <div class="footer-item">
                             <h4 class="text-light mb-3">Contact</h4>
-                            <p>Address: 1429 Netus Rd, NY 48247</p>
-                            <p>Email: Example@gmail.com</p>
+                            <p>Address: Chirattapalam, Fort Kochi, Ernakulam, 682001</p>
+                            <p>Email: PlantzAura@gmail.com</p>
                             <p>Phone: +0123 4567 8910</p>
                             <p>Payment Accepted</p>
-                            <img src="img/payment.png" class="img-fluid" alt="">
+                            <img src="{% static 'img/payment.png' %}" class="img-fluid" alt="">
                         </div>
                     </div>
                 </div>
@@ -250,7 +248,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Your Site Name</a>, All right reserved.</span>
+                        <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i><p>PlantzAura</p></a>, All right reserved.</span>
                     </div>
                     <div class="col-md-6 my-auto text-center text-md-end text-white">
                         <!--/*** The author’s attribution link must remain intact in the template. ***/-->
@@ -272,12 +270,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/lightbox/js/lightbox.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/lightbox/js/lightbox.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
     </body>
 
 </html>

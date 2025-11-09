@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist - Plantz Aura</title>
+
+    <!-- BOOTSTRAP -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5fff3;
+        }
+        .navbar {
+            background: #3d8b3d;
+        }
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: 600;
+        }
+        .card {
+            border-radius: 12px;
+        }
+        .card img {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            height: 200px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg px-4">
+        <a class="navbar-brand" href="/">Plantz Aura</a>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Your Wishlist</h2>
+
+        {% if items %}
+            <div class="row">
+                {% for item in items %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm">
+
+                            <!-- IMAGE -->
+                            {% if item.product.image %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                            {% else %}
+                                <img src="https://via.placeholder.com/300x200?text=No+Image" alt="">
+                            {% endif %}
+
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.product.name }}</h5>
+                                <p class="card-text">₹{{ item.product.price }}</p>
+
+                                <div class="d-flex justify-content-between">
+
+                                    <!-- Add to Cart -->
+                                    <form action="{% url 'add_to_cart' item.product.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-success btn-sm">Add to Cart</button>
+                                    </form>
+
+                                    <!-- Remove -->
+                                    <form action="{% url 'remove_from_wishlist' item.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-danger btn-sm">Remove</button>
+                                    </form>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <p class="text-center text-muted">Your wishlist is empty 😢</p>
+        {% endif %}
+    </div>
+
+    <!-- BOOTSTRAP JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Plantz Aura</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eaf5ea;
+        }
+        .container {
+            width: 100%;
+            max-width: 420px;
+            margin: 70px auto;
+            padding: 25px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #c8e6c9;
+            border-radius: 8px;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4caf50;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+        }
+        .links {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .links a {
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .messages {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Create Account</h2>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password1" placeholder="Password" required>
+        <input type="password" name="password2" placeholder="Confirm Password" required>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="links">
+        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </div>
+</div>
+
+</body>
+</html>
