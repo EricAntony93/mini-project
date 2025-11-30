@@ -1,3 +1,9 @@
+/* Remove browser default margin that can leave white strips */
+/* body { margin: 0; } */
+body, html {
+    margin: 0;
+    padding: 0;
+}
 
 /*** Spinner Start ***/
 #spinner {
@@ -83,7 +89,8 @@
 
 .topbar {
     padding: 20px;
-    border-radius: 230px 100px;
+    border-radius: 0px !important;
+    width: 100%;
 }
 
 .topbar .top-info {
@@ -226,20 +233,47 @@
 }
 
 
+/* === FIX HEADER GAP === */
 @media (min-width: 992px) {
-    .hero-header,
     .page-header {
-        margin-top: 152px !important;
+        margin-top: 140px !important;  /* adjust 120–160 depending on monitor */
     }
 }
 
-@media (max-width: 992px) {
-    .hero-header,
+@media (max-width: 991.98px) {
     .page-header {
-        margin-top: 97px !important;
+        margin-top: 100px !important;  /* adjust 80–120 on mobile */
     }
 }
+
+
 /*** Hero Header end ***/
+/* Compensate for the fixed header height */
+@media (min-width: 992px) {
+  body { padding-top: 120px; } /* Adjust 110–140px if needed */
+}
+
+@media (max-width: 991.98px) {
+  body { padding-top: 80px; }  /* Adjust 80–100px if needed */
+}
+
+.product-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-img {
+    height: 260px;               /* Same height for all images */
+    width: 100%;
+    object-fit: cover;           /* Crop to fit nicely */
+    border-radius: 10px 10px 0 0;
+}
+
+.product-body {
+    flex: 1;
+}
 
 
 /*** featurs Start ***/
@@ -300,7 +334,15 @@
 
 .fruite .fruite-item {
     height: 100%;
+    display: flex;
+    flex-direction: column;
     transition: 0.5s;
+}
+.fruite .fruite-item .p-4 {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .fruite .fruite-item:hover {
     box-shadow: 0 0 55px rgba(0, 0, 0, 0.4);
@@ -311,7 +353,11 @@
     transition: 0.5s;
     border-radius: 10px 10px 0 0;
 }
-
+.fruite .fruite-item .fruite-img img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
 .fruite .fruite-item .fruite-img img {
     transition: 0.5s;
 }
@@ -459,5 +505,17 @@
 .footer .footer-item p.mb-4 {
     line-height: 35px;
 }
+/* Make the footer stretch edge-to-edge regardless of parent padding */
+.footer-full {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+/* Optional: remove horizontal padding inside if needed */
+.footer-full .container-fluid { padding-left: 0; padding-right: 0; }
+
+
+
 /*** Footer End ***/
 

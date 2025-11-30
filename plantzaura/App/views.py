@@ -1,30 +1,78 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
-from .models import CartItem
-from .models import Product
+from .models import CartItem,Product,BillingDetails
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout,get_user_model
 from django.contrib import messages
+from .models import Product,UserProfile
+from django.core.mail import send_mail, BadHeaderError
+from decimal import Decimal
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from .forms import BillingDetailsForm
+from django.db import transaction, OperationalError
+import logging
 
-# Create your views here.
+
+def cart(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+
+    # Attach grand_total dynamically to each CartItem object
+    for item in cart_items:
+        item.grand_total = float(item.product.price) * float(item.quantity)
+
+    total = sum(item.grand_total for item in cart_items)
+
+    return render(request, 'cart.html', {
+        'cart_items': cart_items,
+        'total': total
+    })
+
+
 def index(request):
-    return render(request, 'index.html')
+    products = Product.objects.all()
+    ordinary_products = Product.objects.filter(category="ordinary")
+    exotic_products = Product.objects.filter(category="exotic")
+    fertilizer_products = Product.objects.filter(category="fertilizer")
+    decor_products = Product.objects.filter(category="decor")
+
+    return render(request, "index.html", {
+        "products": products,
+        "ordinary_products": ordinary_products,
+        "exotic_products": exotic_products,
+        "fertilizer_products": fertilizer_products,
+        "decor_products": decor_products,
+    })
 
 @login_required
-def cart(request):
-    items = CartItem.objects.filter(user=request.user)
-    total = sum(item.total_price() for item in items)
-    return render(request, "cart.html", {"items": items, "total": total})
-
-
 def checkout(request):
-    return render(request, 'checkout.html')
+    cart_items = CartItem.objects.filter(user=request.user)
 
-def product_detail(request):
-    return render(request, 'product_detail.html')
-  
+    for item in cart_items:
+        item.grand_total = float(item.product.price) * float(item.quantity)
+
+    subtotal = sum(item.grand_total for item in cart_items)
+    shipping = 50.0
+    grand_total = subtotal + shipping
+
+    return render(request, 'checkout.html', {
+        'cart_items': cart_items,
+        'subtotal': subtotal,
+        'shipping': shipping,
+        'grand_total': grand_total,
+    })
+
+
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'product_detail.html', {"product": product})
+
 def shop(request):
-    return render(request, 'shop.html')
+    products = Product.objects.all()
+    return render(request, 'shop.html', {'products': products})
+
+
 
 def about(request):
     return render(request, 'about.html')
@@ -35,17 +83,6 @@ def contact(request):
 def terms_conditions(request):
     return render(request, 'terms_conditions.html')
 
-def privacy_policy(request):
-    return render(request, 'privacy_policy.html')
-
-def coming_soon(request):   
-    return render(request, 'coming_soon.html')
-
-def error_404(request, exception):
-    return render(request, '404.html')
-
-def maintenance(request):
-    return render(request, 'maintenance.html')
 
 def sitemap(request):
     return render(request, 'sitemap.html')
@@ -54,50 +91,31 @@ def search_results(request):
     return render(request, 'search_results.html')
 
 def user_profile(request):
-    return render(request, 'user_profile.html')
-
-def order_history(request):
-    return render(request, 'order_history.html')
-
-def wishlist(request):
-    return render(request, 'wishlist.html')
+    return render(request, 'userprofile.html')
 
 def newsletter_subscription(request):
     return render(request, 'newsletter_subscription.html')
 
-def payment_success(request):
-    return render(request, 'payment_success.html')
-
-def payment_failure(request):
-    return render(request, 'payment_failure.html')
-
-def product_reviews(request):
-    return render(request, 'product_reviews.html')
-
-
+@login_required
 def update_cart(request, product_id, action):
-    cart = request.session.get('cart', {})
-
-    if str(product_id) not in cart:
-        return redirect('cart')
+    cart_item = get_object_or_404(CartItem, user=request.user, product_id=product_id)
 
     if action == "increase":
-        cart[str(product_id)] += 1
-    elif action == "decrease":
-        if cart[str(product_id)] > 1:
-            cart[str(product_id)] -= 1
+        cart_item.quantity += 1
+    elif action == "decrease" and cart_item.quantity > 1:
+        cart_item.quantity -= 1
 
-    request.session['cart'] = cart
+    cart_item.save()
     return redirect('cart')
 
-
+@login_required
 def remove_cart(request, product_id):
-    cart = request.session.get('cart', {})
-    cart.pop(str(product_id), None)
-    request.session['cart'] = cart
+    cart_item = get_object_or_404(CartItem, user=request.user, product_id=product_id)
+    cart_item.delete()
     return redirect('cart')
 
-def add_to_cart(request, product_id):
+@login_required
+def add_cart(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
     # Check if item already exists
@@ -112,32 +130,42 @@ def add_to_cart(request, product_id):
 
     return redirect('cart')
 
+User = get_user_model()
+
 def register_user(request):
     if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
+        username = request.POST.get("username")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        email = request.POST.get("email")
+        password1 = request.POST.get("password1")
+        password2 = request.POST.get("password2")
 
         if password1 != password2:
             messages.error(request, "Passwords do not match.")
-            return redirect('register')
+            return redirect("register")
 
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already taken.")
-            return redirect('register')
+            return redirect("register")
+
+        # No email check in the oldest version
+        # No try-except
 
         user = User.objects.create_user(
             username=username,
             email=email,
-            password=password1
+            password=password1,
+            first_name=first_name,
+            last_name=last_name,
         )
-        user.save()
-        messages.success(request, "Account created successfully! Please login.")
-        return redirect('login')
+
+        # No user profile creation here in the oldest version
+
+        messages.success(request, "Account created successfully!")
+        return redirect("login")
 
     return render(request, "register.html")
-
 
 def login_user(request):
     if request.method == "POST":
@@ -183,3 +211,85 @@ def product_list(request):
 
 def Blog(request):
     return render(request, 'Blog.html')
+
+@login_required
+def payment(request):
+    cart_items = CartItem.objects.filter(user=request.user)
+
+    # SUM all item totals instead of creating a set
+    grand_total = sum(item.product.price * item.quantity for item in cart_items)
+
+    if request.method == "POST":
+        method = request.POST.get("payment_method")
+        return redirect('payment_success')
+
+    return render(request, "payment.html", {"total_amount": grand_total + 50.0})  # including shipping
+
+
+
+@login_required
+def payment_success(request):
+    # show the template that contains the billing form after a successful payment
+    cart_items = CartItem.objects.filter(user=request.user)
+    grand_total = sum(item.product.price * item.quantity for item in cart_items)
+    return render(request, "success.html", {"total_amount": grand_total})
+
+
+@login_required
+def save_billing(request):
+    if request.method != "POST":
+        return redirect('billing_details')
+
+    # Load existing instance if exists (so update instead of create)
+    instance = BillingDetails.objects.filter(user=request.user).first()
+
+    form = BillingDetailsForm(request.POST, instance=instance)
+
+    if form.is_valid():
+        billing = form.save(commit=False)
+        billing.user = request.user
+        billing.save()
+
+        # Cart items & totals
+        cart_items = CartItem.objects.filter(user=request.user)
+        subtotal = sum(float(item.total_price()) for item in cart_items)
+        shipping = 50.0
+        grand_total = round(subtotal + shipping, 2)
+
+        subtotal = round(subtotal, 2)
+
+        # Render HTML email
+        message = render_to_string("email_receipt.html", {
+            "billing": billing,
+            "items": cart_items,
+            "subtotal": subtotal,
+            "shipping": shipping,
+            "grand_total": grand_total,
+        })
+
+        # Send email (set fail_silently=False for debugging)
+        send_mail(
+            subject="PlantzAura - Order Receipt",
+            message="",
+            html_message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[billing.email],
+            fail_silently=False,
+        )
+
+        return redirect('billing_success')
+
+    # If invalid, show form again
+    return render(request, "billing_details.html", {"form": form})
+
+
+@login_required
+def billing_success(request):
+    return render(request, "billing_success.html")
+
+@login_required
+def billing_details(request):
+    billing = BillingDetails.objects.filter(user=request.user).first()
+    form = BillingDetailsForm(instance=billing)
+    return render(request, "billing_details.html", {"form": form})
+

@@ -32,17 +32,20 @@ urlpatterns = [
     path('sitemap/',views.sitemap, name='sitemap'),
     path('search_results/',views.search_results, name='search_results'),
     path('newsletter_subscription/',views.newsletter_subscription, name='newsletter_subscription'),
-    path('payment_success/',views.payment_success, name='payment_success'),
-    path('payment_failure/',views.payment_failure, name='payment_failure'),
     path('update-cart/<int:product_id>/<str:action>/', views.update_cart, name='update_cart'),
     path('remove-cart/<int:product_id>/', views.remove_cart, name='remove_cart'),
-    path("add-to-cart/<int:product_id>/", views.add_to_cart, name="add_to_cart"),
+    path("add_cart/<int:product_id>/", views.add_cart, name="add_cart"),
     path("login/", views.login_user, name="login"),
     path("register/", views.register_user, name="register"),
     path("logout/", views.logout_user, name="logout"),
     path("user_profile/", views.user_profile, name="user_profile"),
     path('shop2/',views.shop2, name='shop2'),
     path('Blog',views.Blog, name='Blog'),
+    path('payment/', views.payment, name='payment'),
+    path('payment_success/', views.payment_success, name='payment_success'),
+    path('save_billing/', views.save_billing, name='save_billing'),
+    path('billing_success/', views.billing_success, name='billing_success'),
+    path('billing-details/', views.billing_details, name='billing_details'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

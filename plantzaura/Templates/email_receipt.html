@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Order Receipt - PlantzAura</title>
+</head>
+<body style="font-family: Arial, sans-serif; background:#f8f9fa; padding:20px;">
+
+    <div style="max-width:600px; margin:auto; background:white; border-radius:10px; padding:20px; border:1px solid #e0e0e0;">
+        
+        <h2 style="text-align:center; color:#2d7a2d;">🌿 PlantzAura - Order Receipt</h2>
+        <p style="text-align:center; color:gray; margin-top:-5px;">
+            Thank you for your purchase!
+        </p>
+
+        <hr style="border:0; border-top:1px solid #ddd;">
+
+        <h3 style="color:#2d7a2d;">Billing Details</h3>
+        <p>
+            <strong>Name:</strong> {{ billing.first_name }} {{ billing.last_name }} <br>
+            <strong>Email:</strong> {{ billing.email }} <br>
+            <strong>Address:</strong> {{ billing.address }}, {{ billing.town }}, {{ billing.country }} - {{ billing.postcode }}<br>
+            <strong>Mobile:</strong> {{ billing.mobile }}
+        </p>
+
+        <hr style="border:0; border-top:1px solid #ddd;">
+
+        <h3 style="color:#2d7a2d;">Order Summary</h3>
+
+        <table width="100%" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
+            <tr style="background:#e8f5e9; font-weight:bold; border-bottom:1px solid #ccc;">
+                <td>Product</td>
+                <td>Qty</td>
+                <td>Price</td>
+                <td>Total</td>
+            </tr>
+
+            {% for item in items %}
+            <tr style="border-bottom:1px solid #eee;">
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.product.price }} Rs</td>
+                <td>{{ item.total_price }} Rs</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <br>
+
+        <div style="text-align:right;">
+            <p><strong>Subtotal:</strong> {{ subtotal }} Rs</p>
+            <p><strong>Shipping:</strong> {{ shipping }} Rs</p>
+            <p style="font-size:18px;"><strong>Grand Total: {{ grand_total }} Rs</strong></p>
+        </div>
+
+        <hr style="border:0; border-top:1px solid #ddd;">
+
+        <p style="text-align:center;">
+            🌱 Thank you for shopping with <strong>PlantzAura</strong>! <br>
+            We hope our plants brighten your space. 🌿
+        </p>
+
+        <p style="text-align:center; font-size:13px; color:gray;">
+            This is an auto-generated email. For any help, reply to this email.
+        </p>
+
+    </div>
+
+</body>
+</html>

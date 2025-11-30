@@ -33,6 +33,7 @@
             margin-bottom: 15px;
             border-radius: 10px;
             border-left: 5px solid #4caf50;
+            font-size: 15px;
         }
 
         .label {
@@ -78,8 +79,16 @@
     </div>
 
     <div class="info-box">
+        <span class="label">Name:</span> {{ user.first_name }} {{ user.last_name }}
+    </div>
+
+    <div class="info-box">
         <span class="label">Email:</span> {{ user.email }}
     </div>
+
+    <!-- <div class="info-box">
+        <span class="label">Phone:</span> {{ profile.phone|default:"Not set" }}
+    </div> -->
 
     <div class="buttons">
         <a href="#" class="btn">Edit Profile</a>
