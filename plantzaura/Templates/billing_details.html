@@ -1,73 +1,139 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Billing Details</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <meta charset="utf-8" />
+  <title>Billing Details</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body { background:#f8f9fa; }
+    .card { border-radius: 10px; }
+    .errorlist { color:#dc3545; list-style:none; padding-left:0; margin-top:.25rem; margin-bottom:0; }
+    .field-error { border-color: #dc3545; box-shadow: none; }
+  </style>
 </head>
+<body>
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="card shadow-sm">
+          <div class="card-body p-4 p-md-5">
 
-<body class="bg-light">
+            <h2 class="h4 mb-4">Billing Details</h2>
 
-<div class="container mt-5">
-    <h3 class="text-center mb-4">Billing Details</h3>
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} py-2" role="alert">{{ message }}</div>
+              {% endfor %}
+            {% endif %}
 
-    <form method="POST" action="{% url 'save_billing' %}">
-        {% csrf_token %}
+            {% if form.non_field_errors %}
+              <ul class="errorlist mb-3">
+                {% for err in form.non_field_errors %}
+                  <li>{{ err }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
 
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                {{ form.first_name.label_tag }}  
-                {{ form.first_name }}
-            </div>
+            <form method="post" action="{% url 'save_billing' %}" novalidate>
+              {% csrf_token %}
 
-            <div class="col-md-6 mb-3">
-                {{ form.last_name.label_tag }}
-                {{ form.last_name }}
-            </div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                  {{ form.first_name|as_widget(attrs={
+                      "class": "form-control" + (" field-error" if form.first_name.errors else ""),
+                      "placeholder": "First name"
+                  }) }}
+                  {{ form.first_name.errors }}
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                  {{ form.last_name|as_widget(attrs={
+                      "class": "form-control" + (" field-error" if form.last_name.errors else ""),
+                      "placeholder": "Last name"
+                  }) }}
+                  {{ form.last_name.errors }}
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="{{ form.company_name.id_for_label }}">{{ form.company_name.label }}</label>
+                {{ form.company_name|as_widget(attrs={
+                    "class": "form-control" + (" field-error" if form.company_name.errors else ""),
+                    "placeholder": "Company name (optional)"
+                }) }}
+                {{ form.company_name.errors }}
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+                {{ form.address|as_widget(attrs={
+                    "class": "form-control" + (" field-error" if form.address.errors else ""),
+                    "placeholder": "House number, street name"
+                }) }}
+                {{ form.address.errors }}
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ form.town.id_for_label }}">{{ form.town.label }}</label>
+                  {{ form.town|as_widget(attrs={
+                      "class": "form-control" + (" field-error" if form.town.errors else ""),
+                      "placeholder": "Town / City"
+                  }) }}
+                  {{ form.town.errors }}
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ form.country.id_for_label }}">{{ form.country.label }}</label>
+                  {{ form.country|as_widget(attrs={
+                      "class": "form-control" + (" field-error" if form.country.errors else ""),
+                      "placeholder": "Country"
+                  }) }}
+                  {{ form.country.errors }}
+                </div>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ form.postcode.id_for_label }}">{{ form.postcode.label }}</label>
+                  {{ form.postcode|as_widget(attrs={
+                      "class": "form-control" + (" field-error" if form.postcode.errors else ""),
+                      "placeholder": "Postcode"
+                  }) }}
+                  {{ form.postcode.errors }}
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ form.mobile.id_for_label }}">{{ form.mobile.label }}</label>
+                  {{ form.mobile|as_widget(attrs={
+                      "class": "form-control" + (" field-error" if form.mobile.errors else ""),
+                      "placeholder": "Mobile number"
+                  }) }}
+                  {{ form.mobile.errors }}
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email|as_widget(attrs={
+                    "class": "form-control" + (" field-error" if form.email.errors else ""),
+                    "placeholder": "you@example.com",
+                    "autocomplete": "email"
+                }) }}
+                {{ form.email.errors }}
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">Save Billing</button>
+            </form>
+
+          </div>
         </div>
-
-        <div class="mb-3">
-            {{ form.company_name.label_tag }}
-            {{ form.company_name }}
-        </div>
-
-        <div class="mb-3">
-            {{ form.address.label_tag }}
-            {{ form.address }}
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                {{ form.town.label_tag }}
-                {{ form.town }}
-            </div>
-
-            <div class="col-md-6 mb-3">
-                {{ form.country.label_tag }}
-                {{ form.country }}
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                {{ form.postcode.label_tag }}
-                {{ form.postcode }}
-            </div>
-
-            <div class="col-md-6 mb-3">
-                {{ form.mobile.label_tag }}
-                {{ form.mobile }}
-            </div>
-        </div>
-
-        <div class="mb-3">
-            {{ form.email.label_tag }}
-            {{ form.email }}
-        </div>
-
-        <button class="btn btn-primary w-100 mt-3">Save Billing</button>
-    </form>
-</div>
-
+      </div>
+    </div>
+  </div>
 </body>
 </html>

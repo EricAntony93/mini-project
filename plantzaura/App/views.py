@@ -13,6 +13,7 @@ from django.conf import settings
 from .forms import BillingDetailsForm
 from django.db import transaction, OperationalError
 import logging
+from .forms import BillingDetailsForm
 
 
 def cart(request):
@@ -229,10 +230,26 @@ def payment(request):
 
 @login_required
 def payment_success(request):
-    # show the template that contains the billing form after a successful payment
+    # cart and totals (you had similar logic)
     cart_items = CartItem.objects.filter(user=request.user)
     grand_total = sum(item.product.price * item.quantity for item in cart_items)
-    return render(request, "success.html", {"total_amount": grand_total})
+
+    # Billing form prefill logic: prefer saved BillingDetails, otherwise use user profile
+    instance = BillingDetails.objects.filter(user=request.user).order_by('-id').first()
+    if instance:
+        form = BillingDetailsForm(instance=instance)
+    else:
+        form = BillingDetailsForm(initial={
+            "first_name": request.user.first_name or "",
+            "last_name":  request.user.last_name or "",
+            "email":      request.user.email or "",
+        })
+
+    return render(request, "success.html", {
+        "total_amount": grand_total,
+        "cart_items": cart_items,
+        "form": form,
+    })
 
 
 @login_required
@@ -289,7 +306,15 @@ def billing_success(request):
 
 @login_required
 def billing_details(request):
-    billing = BillingDetails.objects.filter(user=request.user).first()
-    form = BillingDetailsForm(instance=billing)
+    instance = BillingDetails.objects.filter(user=request.user).order_by('-id').first()
+    if instance:
+        form = BillingDetailsForm(instance=instance)
+    else:
+        initial = {
+            "first_name": request.user.first_name or "",
+            "last_name":  request.user.last_name or "",
+            "email":      request.user.email or "",
+        }
+        form = BillingDetailsForm(initial=initial)
     return render(request, "billing_details.html", {"form": form})
 
